@@ -2,5 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://reduce-image-file-size.fahimrj04.workers.dev/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://reduce-image-file-size.fahimrj04.workers.dev/compress-image-to-100kb</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reduce-image-file-size.fahimrj04.workers.dev/compress-image-to-200kb</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reduce-image-file-size.fahimrj04.workers.dev/compress-image-to-500kb</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reduce-image-file-size.fahimrj04.workers.dev/compress-image-to-50kb</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reduce-image-file-size.fahimrj04.workers.dev/heic-to-jpg-converter</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
