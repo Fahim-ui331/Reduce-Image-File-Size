@@ -19,7 +19,7 @@ function CompressionSettings({
       <fieldset className="setting-group">
         <legend>Target size</legend>
         <div className="target-options">
-          {[100, 200, 500].map((size) => (
+          {[50, 100, 200, 500].map((size) => (
             <label className="radio-card" key={size}>
               <input
                 type="radio"

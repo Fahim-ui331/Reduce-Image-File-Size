@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
+import { landingPages } from "./lib/seoPages.js";
 import "./styles.css";
 
 createRoot(document.getElementById("root")).render(
@@ -9,7 +10,9 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/compress-image-to-100kb" element={<App targetPage />} />
+        {Object.entries(landingPages).map(([path, page]) => (
+          <Route key={path} path={path} element={<App pageConfig={page} />} />
+        ))}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

@@ -24,6 +24,10 @@ npm run build
 
 The production output is written to `dist/`. No deployment provider, domain, backend, or environment variables are configured by this project.
 
+## Target-size landing pages
+
+React Router serves the shared compressor at `/` and the SEO pages `/compress-image-to-50kb`, `/compress-image-to-100kb`, `/compress-image-to-200kb`, and `/compress-image-to-500kb`. The `/heic-to-jpg-converter` page selects JPG output, but HEIC decoding is not yet enabled; see the HEIC limitation below. Production hosting should be configured to serve the SPA entry point for these paths.
+
 ## Supported formats
 
 - **Input that can be processed:** JPG/JPEG, PNG, and WebP, subject to the browser being able to decode the image.

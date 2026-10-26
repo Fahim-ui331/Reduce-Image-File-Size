@@ -8,6 +8,7 @@ import {
   validateImageFile,
   validateTargetSize,
 } from "../src/lib/imageTypes.js";
+import { defaultPage, landingPages } from "../src/lib/seoPages.js";
 
 function signatureFile(name, type, signature, size = signature.length) {
   const bytes = new Uint8Array(size);
@@ -98,11 +99,34 @@ test("rejects empty, oversized, unknown, mismatched, and corrupted files", async
 });
 
 test("validates target sizes and converts KB to bytes", () => {
+  assert.equal(validateTargetSize("50"), 51200);
   assert.equal(validateTargetSize("100"), 102400);
   assert.equal(validateTargetSize("10.5"), 10752);
   assert.throws(() => validateTargetSize("9"), /between 10 and 25,600 KB/);
   assert.throws(() => validateTargetSize("25601"), /between 10 and 25,600 KB/);
   assert.throws(() => validateTargetSize("not a number"), /between 10 and 25,600 KB/);
+});
+
+test("defines unique SEO metadata and correct defaults for landing pages", () => {
+  assert.deepEqual(
+    Object.keys(landingPages).sort(),
+    [
+      "/compress-image-to-100kb",
+      "/compress-image-to-200kb",
+      "/compress-image-to-500kb",
+      "/compress-image-to-50kb",
+      "/heic-to-jpg-converter",
+    ].sort(),
+  );
+
+  const titles = Object.values(landingPages).map((page) => page.title);
+  assert.equal(new Set(titles).size, titles.length);
+  assert.equal(landingPages["/compress-image-to-200kb"].targetMode, "200");
+  assert.equal(landingPages["/compress-image-to-500kb"].targetMode, "500");
+  assert.equal(landingPages["/compress-image-to-50kb"].targetMode, "50");
+  assert.equal(landingPages["/heic-to-jpg-converter"].outputFormat, "jpeg");
+  assert.equal(landingPages["/heic-to-jpg-converter"].conversionMode, true);
+  assert.equal(defaultPage.targetMode, "200");
 });
 
 test("resizes toward the target while keeping proportions and safe bounds", () => {

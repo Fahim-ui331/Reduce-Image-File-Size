@@ -5,6 +5,7 @@ import ImageCard from "./components/ImageCard.jsx";
 import UploadZone from "./components/UploadZone.jsx";
 import { compressImage } from "./lib/compressImage.js";
 import { formatFileSize } from "./lib/format.js";
+import { defaultPage } from "./lib/seoPages.js";
 import {
   MAX_BATCH_SIZE,
   validateImageFile,
@@ -13,12 +14,12 @@ import {
 
 const supportedExtensions = ".jpg, .jpeg, .png, .webp, .heic, .heif";
 
-function App({ targetPage = false }) {
+function App({ pageConfig = defaultPage }) {
   const location = useLocation();
   const [items, setItems] = useState([]);
-  const [targetMode, setTargetMode] = useState(targetPage ? "100" : "200");
+  const [targetMode, setTargetMode] = useState(pageConfig.targetMode);
   const [customTarget, setCustomTarget] = useState("200");
-  const [outputFormat, setOutputFormat] = useState("webp");
+  const [outputFormat, setOutputFormat] = useState(pageConfig.outputFormat);
   const [notice, setNotice] = useState("");
   const [announcement, setAnnouncement] = useState("");
   const [targetError, setTargetError] = useState("");
@@ -29,16 +30,12 @@ function App({ targetPage = false }) {
   const mountedRef = useRef(true);
 
   useEffect(() => {
-    setTargetMode(targetPage ? "100" : "200");
-  }, [targetPage, location.pathname]);
+    setTargetMode(pageConfig.targetMode);
+    setOutputFormat(pageConfig.outputFormat);
+  }, [pageConfig, location.pathname]);
 
   useEffect(() => {
-    const title = targetPage
-      ? "Compress Image to 100KB Online for Free | Image Compressor"
-      : "Image Compressor — Smaller images, made simple";
-    const description = targetPage
-      ? "Compress JPG and PNG photos toward 100 KB directly in your browser. Adjust image quality and dimensions while keeping your files on your device, with no server uploads."
-      : "Compress JPG, PNG, and WebP images to a practical target size in your browser. Your photos stay on your device.";
+    const { title, description } = pageConfig;
 
     document.title = title;
     document.querySelector('meta[name="description"]')?.setAttribute("content", description);
@@ -55,7 +52,7 @@ function App({ targetPage = false }) {
     document.querySelector('meta[property="og:description"]')?.setAttribute("content", description);
     document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", title);
     document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", description);
-  }, [targetPage, location.pathname]);
+  }, [pageConfig, location.pathname]);
 
   function replaceItems(nextItems) {
     itemsRef.current = nextItems;
@@ -268,24 +265,8 @@ function App({ targetPage = false }) {
       <main className="main-content">
         <section className="intro" aria-labelledby="page-title">
           <p className="eyebrow">Simple. Private. In your browser.</p>
-          {targetPage ? (
-            <>
-              <h1 id="page-title">Compress Image to 100KB Online for Free</h1>
-              <p className="intro-copy">
-                Compress JPG and PNG photos toward 100 KB directly in your browser by adjusting
-                image quality and dimensions. Your files stay on your device and are never
-                uploaded to a server.
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 id="page-title">Smaller images, made simple.</h1>
-              <p className="intro-copy">
-                Compress JPG, PNG, and WebP images for easier sharing and uploads.
-                Your files stay on your device.
-              </p>
-            </>
-          )}
+          <h1 id="page-title">{pageConfig.heading}</h1>
+          <p className="intro-copy">{pageConfig.copy}</p>
         </section>
 
         <div className="workflow">
@@ -308,6 +289,11 @@ function App({ targetPage = false }) {
             outputFormat={outputFormat}
             setOutputFormat={setOutputFormat}
           />
+          {pageConfig.conversionMode && (
+            <p className="notice" role="status">
+              HEIC decoding is not enabled yet. You can still compress supported JPG, PNG, or WebP files to JPG.
+            </p>
+          )}
           {targetError && <p className="error-text target-error" role="alert">{targetError}</p>}
 
           <div className="workflow-actions">
