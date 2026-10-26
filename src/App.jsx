@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import CompressionSettings from "./components/CompressionSettings.jsx";
 import ImageCard from "./components/ImageCard.jsx";
 import UploadZone from "./components/UploadZone.jsx";
@@ -12,9 +13,10 @@ import {
 
 const supportedExtensions = ".jpg, .jpeg, .png, .webp, .heic, .heif";
 
-function App() {
+function App({ targetPage = false }) {
+  const location = useLocation();
   const [items, setItems] = useState([]);
-  const [targetMode, setTargetMode] = useState("200");
+  const [targetMode, setTargetMode] = useState(targetPage ? "100" : "200");
   const [customTarget, setCustomTarget] = useState("200");
   const [outputFormat, setOutputFormat] = useState("webp");
   const [notice, setNotice] = useState("");
@@ -25,6 +27,35 @@ function App() {
   const itemsRef = useRef([]);
   const idRef = useRef(0);
   const mountedRef = useRef(true);
+
+  useEffect(() => {
+    setTargetMode(targetPage ? "100" : "200");
+  }, [targetPage, location.pathname]);
+
+  useEffect(() => {
+    const title = targetPage
+      ? "Compress Image to 100KB Online for Free | Image Compressor"
+      : "Image Compressor — Smaller images, made simple";
+    const description = targetPage
+      ? "Compress JPG and PNG photos toward 100 KB directly in your browser. Adjust image quality and dimensions while keeping your files on your device, with no server uploads."
+      : "Compress JPG, PNG, and WebP images to a practical target size in your browser. Your photos stay on your device.";
+
+    document.title = title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", description);
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    const canonicalUrl = canonical
+      ? new URL(location.pathname, canonical.href).href
+      : null;
+    if (canonicalUrl) {
+      canonical.href = canonicalUrl;
+      document.querySelector('meta[property="og:url"]')?.setAttribute("content", canonicalUrl);
+    }
+    document.querySelector('meta[property="og:title"]')?.setAttribute("content", title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute("content", description);
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", title);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", description);
+  }, [targetPage, location.pathname]);
 
   function replaceItems(nextItems) {
     itemsRef.current = nextItems;
@@ -237,11 +268,24 @@ function App() {
       <main className="main-content">
         <section className="intro" aria-labelledby="page-title">
           <p className="eyebrow">Simple. Private. In your browser.</p>
-          <h1 id="page-title">Smaller images, made simple.</h1>
-          <p className="intro-copy">
-            Compress JPG, PNG, and WebP images for easier sharing and uploads.
-            Your files stay on your device.
-          </p>
+          {targetPage ? (
+            <>
+              <h1 id="page-title">Compress Image to 100KB Online for Free</h1>
+              <p className="intro-copy">
+                Compress JPG and PNG photos toward 100 KB directly in your browser by adjusting
+                image quality and dimensions. Your files stay on your device and are never
+                uploaded to a server.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 id="page-title">Smaller images, made simple.</h1>
+              <p className="intro-copy">
+                Compress JPG, PNG, and WebP images for easier sharing and uploads.
+                Your files stay on your device.
+              </p>
+            </>
+          )}
         </section>
 
         <div className="workflow">
